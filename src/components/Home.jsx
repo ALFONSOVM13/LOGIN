@@ -13,7 +13,7 @@ const Home = () => {
     if (!token) {
       navigate('/login');
     } else {
-      axios.get('http://localhost:3001/userinfo', {
+      axios.get('https://server-d4tn.onrender.com/userinfo', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
