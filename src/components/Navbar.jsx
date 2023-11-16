@@ -1,8 +1,10 @@
 import React from 'react';
+import { Nav, Navbar, Button } from 'react-bootstrap';
 import { NavLink, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-function Navbar() {
+function CustomNavbar() {
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
 
@@ -13,34 +15,29 @@ function Navbar() {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
-      <div className="container">
-        <NavLink className="navbar-brand" to="/home">Home</NavLink>
-        <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav">
-            {token ? (
-              <li>
-                <button className="nav-link" onClick={handleLogout}>Logout</button>
-              </li>
-            ) : (
-              <>
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/login">Login</NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/register">Register</NavLink>
-                </li>
-              </>
-            )}
-          </ul>
-        </div>
-      </div>
-    </nav>
+    <Navbar expand="lg" bg="light">
+      <Navbar.Brand as={NavLink} to="/home">Home</Navbar.Brand>
+      <Navbar.Toggle aria-controls="navbarNav" />
+      <Navbar.Collapse id="navbarNav">
+        <Nav className="ml-auto">
+          {token ? (
+            <Nav.Item>
+              <Button variant="link" onClick={handleLogout}>Logout</Button>
+            </Nav.Item>
+          ) : (
+            <>
+              <Nav.Item>
+                <Nav.Link as={NavLink} to="/login">Login</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link as={NavLink} to="/register">Register</Nav.Link>
+              </Nav.Item>
+            </>
+          )}
+        </Nav>
+      </Navbar.Collapse>
+    </Navbar>
   );
 }
 
-export default Navbar;
-
+export default CustomNavbar;
