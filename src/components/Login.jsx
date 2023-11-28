@@ -1,33 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
 
+export let userRole = '';
+
 function Login() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // const [userRole, setUserRole] = useState('');
+  const [Username, setUsername] = useState('');
+  const [Password, setPassword] = useState('');
   const [error, setError] = useState(''); 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem('token') || Cookies.get('token');
-    if (token) {
-      navigate('/home');
-    }
-  }, [navigate]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const response = await axios.post('https://server-d4tn.onrender.com/login', { username, password });
+      const response = await axios.post('https://backendtienda.onrender.com/login', { Username, Password });
       const token = response.data.token;
-      localStorage.setItem('token', token);
       Cookies.set('token', token, { expires: 0.5 });
       navigate('/home');
     } catch (error) {
-      console.error('Error de inicio de sesión:', error);      
+      console.error('Error de inicio de sesión:', error);
+      setError('');
       Swal.fire({
         icon: 'error',
         title: 'Error de inicio de sesión',
@@ -44,13 +42,12 @@ function Login() {
             <h2 className="text-center p-3 bg-primary text-white w-100">Iniciar Sesión</h2>
             <div className="card-body">
               {error && <p className="error">{error}</p>}
-
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                   <input
                     type="text"
                     className="form-control"
-                    value={username}
+                    value={Username}
                     onChange={(e) => setUsername(e.target.value)}
                     placeholder="Usuario"
                   />
@@ -59,7 +56,7 @@ function Login() {
                   <input
                     type="password"
                     className="form-control"
-                    value={password}
+                    value={Password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Contraseña"
                   />

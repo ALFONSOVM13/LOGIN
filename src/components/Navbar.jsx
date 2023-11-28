@@ -1,42 +1,65 @@
-import React from 'react';
-import { Nav, Navbar, Button } from 'react-bootstrap';
-import { NavLink, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import '../styles/navbar.scss'
+import { Button } from 'react-bootstrap';
 
-function CustomNavbar() {
-  const token = localStorage.getItem('token');
+function CustomNavbar({ userRole }) {
   const navigate = useNavigate();
+
 
   const handleLogout = () => {
     Cookies.remove('token');
-    localStorage.removeItem('token');
-    navigate('/login', { replace: true });
+    sessionStorage.clear();
+    navigate('/', { replace: true });
   };
 
+  const token = Cookies.get('token');
+
   return (
-    <Navbar expand="lg" bg="light">
-      <Navbar.Brand as={NavLink} to="/home">Home</Navbar.Brand>
-      <Navbar.Toggle aria-controls="navbarNav" />
-      <Navbar.Collapse id="navbarNav">
-        <Nav className="ml-auto">
-          {token ? (
-            <Nav.Item>
-              <Button variant="link" onClick={handleLogout}>Logout</Button>
-            </Nav.Item>
-          ) : (
+    <nav className="navbar" style={{ backgroundColor: '#000000' }}>
+      <div className="navbar-container">
+        <div className="navbar-links">
+          <NavLink to="/home" className="link" activeClassName="active">
+            Inicio
+          </NavLink>
+
+          {token && (
+            <NavLink to="/pedidos" className="link">
+              Mi cuenta
+            </NavLink>
+          )}
+          {token && userRole !== 'cliente'  && (
             <>
-              <Nav.Item>
-                <Nav.Link as={NavLink} to="/login">Login</Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link as={NavLink} to="/register">Register</Nav.Link>
-              </Nav.Item>
+              <NavLink to="/admin" className="link">
+                Admin
+              </NavLink>
+              <NavLink to="/ventas" className="link">
+                Ventas
+              </NavLink>
             </>
           )}
-        </Nav>
-      </Navbar.Collapse>
-    </Navbar>
+
+          {!token ? (
+            <>
+              <NavLink to="/login" className="link">
+                Login
+              </NavLink>
+              <NavLink to="/register" className="link">
+                Register
+              </NavLink>
+            </>
+          ) : (
+              <Button  onClick={handleLogout} to="/" className="logout">
+                Cerrar Sesión
+              </Button>
+
+            
+          )}
+        </div>
+      </div>
+    </nav>
   );
 }
 

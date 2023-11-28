@@ -8,44 +8,59 @@ import '../App.css';
 
 
 const Register = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
+  const [Username, setUsername] = useState('');
+  const [Password, setPassword] = useState('');
+  const [FirstName, setFirstName] = useState('');
+  const [LastName, setLastName] = useState('');
+  const [Email, setEmail] = useState('');
+  const [Cedula, setCedula] = useState('');
+  const [Phone, setPhone] = useState('');
+  const [isValid, setIsValid] = useState(true)
   const [errors, setErrors] = useState({
-    email: '',
-    username: '',
-    password: '',
+    Email: '',
+    Username: '',
+    Password: '',
   });
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const usernameRegex = /^[a-zA-Z0-9]+$/;
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
 
+
+
+
   const handleEmailChange = (value) => {
     setEmail(value);
     setErrors((prevErrors) => ({
       ...prevErrors,
-      email: value.trim() !== '' ? (emailRegex.test(value) ? '' : 'Por favor, introduce un correo electrónico válido') : 'Por favor, complete el campo de correo electrónico',
+      Email: value.trim() !== '' ? (emailRegex.test(value) ? '' : 'Por favor, introduce un correo electrónico válido') : 'Por favor, complete el campo de correo electrónico',
       general: '',
     }));
+  }
+
+
+
+  const handleCedulaChange = (value) => {
+    setCedula(value);
   };
-  
+
+  const handlePhoneChange = (value) => {
+    setPhone(value);
+  };
+
   const handleUsernameChange = (value) => {
     setUsername(value);
     setErrors((prevErrors) => ({
       ...prevErrors,
-      username: value.trim() !== '' ? (usernameRegex.test(value) ? '' : 'El nombre de usuario solo puede contener letras y números') : 'Por favor, complete el campo de nombre de usuario',
+      Username: value.trim() !== '' ? (usernameRegex.test(value) ? '' : 'El nombre de usuario solo puede contener letras y números') : 'Por favor, complete el campo de nombre de usuario',
       general: '',
     }));
   };
-  
   const handlePasswordChange = (value) => {
     setPassword(value);
     setErrors((prevErrors) => ({
       ...prevErrors,
-      password: value.trim() !== '' ? (passwordRegex.test(value) ? '' : 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número') : 'Por favor, complete el campo de contraseña',
+      Password: value.trim() !== '' ? (passwordRegex.test(value) ? '' : 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número') : 'Por favor, complete el campo de contraseña',
       general: '',
     }));
   };
@@ -54,16 +69,16 @@ const Register = () => {
     setFirstName(value);
     setErrors((prevErrors) => ({
       ...prevErrors,
-      firstName: value.trim() !== '' ? '' : 'Por favor, complete el campo de nombre',
+      FirstName: value.trim() !== '' ? '' : 'Por favor, complete el campo de nombre',
       general: '',
     }));
   };
-  
+
   const handleLastNameChange = (value) => {
     setLastName(value);
     setErrors((prevErrors) => ({
       ...prevErrors,
-      lastName: value.trim() !== '' ? '' : 'Por favor, complete el campo de apellido',
+      LastName: value.trim() !== '' ? '' : 'Por favor, complete el campo de apellido',
       general: '',
     }));
   };
@@ -73,38 +88,44 @@ const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    if (!passwordRegex.test(Password)) {
+      setErrors({ ...errors, Password: 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número' });
+      return;
+    }
+  
 
     let newErrors = {};
 
-    if (!username || !password || !firstName || !lastName || !email) {
+    if (!Username || !Password || !FirstName || !LastName || !Email) {
       newErrors = { ...newErrors, general: 'Todos los campos son requeridos. Por favor, complétalos.' };
     } else {
-      if (!username) {
-        newErrors = { ...newErrors, username: 'Por favor, complete el campo de nombre de usuario' };
+      if (!Username) {
+        newErrors = { ...newErrors, Username: 'Por favor, complete el campo de nombre de usuario' };
       }
-      if (!password) {
-        newErrors = { ...newErrors, password: 'Por favor, complete el campo de contraseña' };
+      if (!Password) {
+        newErrors = { ...newErrors, Password: 'Por favor, complete el campo de contraseña' };
       }
-      if (!firstName) {
-        newErrors = { ...newErrors, firstName: 'Por favor, complete el campo de nombre' };
+      if (!FirstName) {
+        newErrors = { ...newErrors, FirstName: 'Por favor, complete el campo de nombre' };
       }
-      if (!lastName) {
-        newErrors = { ...newErrors, lastName: 'Por favor, complete el campo de apellido' };
+      if (!LastName) {
+        newErrors = { ...newErrors, LastName: 'Por favor, complete el campo de apellido' };
       }
-      if (!email) {
-        newErrors = { ...newErrors, email: 'Por favor, complete el campo de correo electrónico' };
+      if (!Email) {
+        newErrors = { ...newErrors, Email: 'Por favor, complete el campo de correo electrónico' };
       }
     }
-
     if (Object.keys(newErrors).length > 0) {
       setErrors({ ...errors, ...newErrors });
+      setIsValid(false); 
       return;
     }
-
+    if (isValid) {
+    
     try {
-      const checkUserResponse = await axios.post('https://server-d4tn.onrender.com/checkuser', {
-        username,
-        email,
+      const checkUserResponse = await axios.post('https://backendtienda.onrender.com/checkuser', {
+        Username,
+        Email,
       });
 
       if (checkUserResponse.data.exists) {
@@ -112,18 +133,18 @@ const Register = () => {
           icon: 'warning',
           title: 'Usuario ya registrado',
           text: 'El usuario o el correo electrónico ya están registrados. Por favor, inicie sesión.',
-        }).then(() => {
-          navigate('/login');
-        });
+        })
         return;
       }
 
-      const response = await axios.post('https://server-d4tn.onrender.com/register', {
-        username,
-        password,
-        firstName,
-        lastName,
-        email,
+      const response = await axios.post('https://backendtienda.onrender.com/register', {
+        Cedula,
+        Username,
+        Password,
+        FirstName,
+        LastName,
+        Email,
+        Phone
       });
       console.log(response.data);
       Swal.fire({
@@ -135,11 +156,12 @@ const Register = () => {
           navigate('/login');
         }
       });
-    } catch (error) {
+    }catch (error) {
       setErrors({ ...errors, general: 'No se pudo completar el registro. Inténtelo de nuevo más tarde.' });
       console.error('Error en la solicitud:', error);
     }
-  };
+  }
+};
 
 
   return (
@@ -154,38 +176,48 @@ const Register = () => {
                   <input
                     type="email"
                     className="form-control"
-                    value={email}
+                    value={Email}
                     onChange={(e) => handleEmailChange(e.target.value)}
                     placeholder="Correo Electrónico"
                   />
-                  {errors.email && <p className="text-danger">{errors.email}</p>}
+                  {errors.Email && <p className="text-danger">{errors.Email}</p>}
                 </div>
                 <div className="mb-3">
                   <input
                     type="text"
                     className="form-control"
-                    value={username}
+                    value={Username}
                     onChange={(e) => handleUsernameChange(e.target.value)}
                     placeholder="Usuario"
-                    
+
                   />
-                  {errors.username && <p className="text-danger">{errors.username}</p>}
+                  {errors.Username && <p className="text-danger">{errors.Username}</p>}
                 </div>
                 <div className="mb-3">
-                  <input
-                    type="password"
-                    className="form-control"
-                    value={password}
-                    onChange={(e) => handlePasswordChange(e.target.value)}
-                    placeholder="Contraseña"
-                  />
-                  {errors.password && <p className="text-danger">{errors.password}</p>}
+                <input
+                  type="password"
+                  className="form-control"
+                  value={Password}
+                  onChange={(e) => handlePasswordChange(e.target.value)}
+                  placeholder="Contraseña"
+                />
+
+                {errors.Password && <p className="text-danger">{errors.Password}</p>}
                 </div>
                 <div className="mb-3">
                   <input
                     type="text"
                     className="form-control"
-                    value={firstName}
+                    value={Cedula}
+                    onChange={(e) => handleCedulaChange(e.target.value)}
+                    placeholder="Cédula"
+                  />
+                </div>
+                <div className="mb-3">
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={FirstName}
                     onChange={(e) => handleFirstNameChange(e.target.value)}
                     placeholder="Nombres"
                   />
@@ -194,15 +226,26 @@ const Register = () => {
                   <input
                     type="text"
                     className="form-control"
-                    value={lastName}
+                    value={LastName}
                     onChange={(e) => handleLastNameChange(e.target.value)}
                     placeholder="Apellidos"
+                  />
+                </div>
+
+
+                <div className="mb-3">
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={Phone}
+                    onChange={(e) => handlePhoneChange(e.target.value)}
+                    placeholder="Teléfono"
                   />
                 </div>
                 {errors.general && <p className="text-danger fw-bold">{errors.general}</p>}
 
                 <button type="submit" className="btn btn-primary btn-block">Registrarse</button>
-                
+
               </form>
             </div>
           </div>
