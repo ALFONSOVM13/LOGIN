@@ -95,7 +95,7 @@ const Pedidos = () => {
 
         for (const item of cartItems) {
             try {
-                const userData = JSON.parse(sessionStorage.getItem('userData'));
+               
 
                 if (!userData || !userData.Cedula) {
                     console.error('No se encontró información de usuario válida.');
