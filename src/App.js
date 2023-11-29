@@ -1,67 +1,42 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import React, { useEffect} from 'react';
+import {  Route, Routes, useLocation } from 'react-router-dom';
+import { useDispatch} from 'react-redux';
+import { getUserInfo } from './Redux/Actions/index'
 import Login from './components/Login';
 import Register from './components/Register';
 import Home from './components/Home';
 import Navbar from './components/Navbar';
 import ProductCrud from '../src/components/CrudProductos'
 import './App.css';
-import Cookies from 'js-cookie';
-import axios from 'axios';
 import ProtectedRoute from './components/ProtectedRoute';
 import Pedidos from './components/Pedidos';
 import VentasVendedor from './components/Ventas';
 import Footer from './components/Footer'
 
 function App() {
-  const [userRole, setUserRole] = useState('');
   const location = useLocation();
-
-  const getUserInfo = async () => {
-    try {
-      const token = Cookies.get('token');
-      if (token) {
-        const response = await axios.get('https://backendtienda.onrender.com/userinfo', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (response.status === 200) {
-          const userData = response.data;
-          sessionStorage.setItem('userData', JSON.stringify(userData));
-          setUserRole(userData.Role);
-
-        }
-      }
-    } catch (error) {
-      console.error('Error al obtener información del usuario:', error);
-    }
-  };
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    getUserInfo();
-  }, []);
-
-
-
+    dispatch(getUserInfo());
+  }, [dispatch]);
 
   return (
-    
       <div className="App">
         <header className="App-header">
-          <Navbar userRole={userRole} />
+          <Navbar/>
         </header>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route element={<ProtectedRoute canActivate={false} redirectPath="/home" />} >
             <Route path="/admin" element={<ProductCrud />} />
+            <Route path="/ventas" element={<VentasVendedor />} />
           </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/home" element={<Home />} />
           <Route path="/pedidos" element={<Pedidos />} />
-          <Route path="/ventas" element={<VentasVendedor />} />
+          
         </Routes>
         {!(location.pathname === '/login' || location.pathname === '/register') && <Footer />}              </div>
     

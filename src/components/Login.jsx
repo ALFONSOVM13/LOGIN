@@ -3,16 +3,18 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
+import { useDispatch } from 'react-redux';
+import { getUserInfo } from '../Redux/Actions/index';
 
 export let userRole = '';
 
 function Login() {
-  // const [isAuthenticated, setIsAuthenticated] = useState(false);
-  // const [userRole, setUserRole] = useState('');
+
   const [Username, setUsername] = useState('');
   const [Password, setPassword] = useState('');
   const [error, setError] = useState(''); 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
 
 
@@ -22,6 +24,7 @@ function Login() {
       const response = await axios.post('https://backendtienda.onrender.com/login', { Username, Password });
       const token = response.data.token;
       Cookies.set('token', token, { expires: 0.5 });
+      dispatch(getUserInfo()); 
       navigate('/home');
     } catch (error) {
       console.error('Error de inicio de sesión:', error);

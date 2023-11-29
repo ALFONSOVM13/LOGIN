@@ -15,9 +15,9 @@ export default function App() {
 
       <div className='text-center p-3' style={{ backgroundColor: '#000000' }}>
         © 2023 Copyright:
-        <a className='text-white'>
+        <h1 className='text-white'>
           UNICOSTA
-        </a>
+        </h1>
       </div>
     </MDBFooter>
   );

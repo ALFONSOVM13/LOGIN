@@ -83,7 +83,7 @@ function VentasVendedor() {
 
 
     return (
-        <div>
+        <div className='ventas'>
             <h1>Ventas</h1>
 
             <div className="row">

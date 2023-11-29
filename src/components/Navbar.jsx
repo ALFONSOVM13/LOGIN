@@ -1,12 +1,26 @@
-import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import '../styles/navbar.scss'
 import { Button } from 'react-bootstrap';
+import {useDispatch, useSelector } from 'react-redux';
+import { getUserInfo } from '../Redux/Actions/index';
 
-function CustomNavbar({ userRole }) {
+
+
+
+function CustomNavbar() {
   const navigate = useNavigate();
+  const userRole = useSelector(state => state.userData?.Role || 'defaultRole');
+    const dispatch = useDispatch();
+
+
+
+
+  useEffect(() => {
+    dispatch(getUserInfo());
+  }, [dispatch]);
 
 
   const handleLogout = () => {
@@ -30,7 +44,7 @@ function CustomNavbar({ userRole }) {
               Mi cuenta
             </NavLink>
           )}
-          {token && userRole !== 'cliente'  && (
+          {token && userRole !== 'cliente' && (
             <>
               <NavLink to="/admin" className="link">
                 Admin
@@ -51,11 +65,11 @@ function CustomNavbar({ userRole }) {
               </NavLink>
             </>
           ) : (
-              <Button  onClick={handleLogout} to="/" className="logout">
-                Cerrar Sesión
-              </Button>
+            <Button onClick={handleLogout} to="/" className="logout">
+              Cerrar Sesión
+            </Button>
 
-            
+
           )}
         </div>
       </div>
