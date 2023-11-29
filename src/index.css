@@ -16,8 +16,8 @@ body {
 }
 
 .icon-cart {
-	width: 40px;
-	height: 40px;
+	width: 60px;
+	height: 60px;
 	stroke: #000;
 }
 
@@ -32,6 +32,7 @@ img {
 /* Header */
 header {
 	display: flex;
+	justify-content: space-between;
 }
 
 .container-icon {
@@ -165,6 +166,19 @@ header {
 	grid-template-columns: repeat(3, 1fr);
 	gap: 20px;
 }
+/* Media query para hacerlo responsive en pantallas más pequeñas */
+@media (max-width: 992px) {
+	.container-items {
+	  grid-template-columns: repeat(2, 1fr);
+	}
+  }
+  
+  /* Media query para pantallas aún más pequeñas, como móviles */
+  @media (max-width: 576px) {
+	.container-items {
+	  grid-template-columns: 1fr;
+	}
+  }
 
 .item {
 	border-radius: 10px;
@@ -246,6 +260,6 @@ header {
   border-radius: 0;
 }
 .ventas{
-	width: 50%;
+	width: 70%;
 	margin: 0 auto;
 }
