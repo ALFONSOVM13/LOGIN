@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 
 const ProductCrud = () => {
     const [productos, setProductos] = useState([]);
-    const [showEditForm, setShowEditForm] = useState(false); // Nuevo estado para mostrar u ocultar el formulario de edición
+    const [showEditForm, setShowEditForm] = useState(false);
     const [editedProduct, setEditedProduct] = useState({});
     const [users, setUsers] = useState([]);
     const [newRole, setNewRole] = useState('');
@@ -101,8 +101,23 @@ const ProductCrud = () => {
     };
     const handleDelete = async (codigo) => {
         try {
-            await axios.delete(`https://backendtienda.onrender.com/products/${codigo}`);
-            await getProductos();
+            const willDelete = await Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Esta acción no se puede deshacer',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, eliminar'
+            });
+    
+            if (willDelete.isConfirmed) {
+                await axios.delete(`https://backendtienda.onrender.com/products/${codigo}`);
+                await getProductos();
+                Swal.fire('¡Eliminado!', 'El producto ha sido eliminado.', 'success');
+            } else {
+                Swal.fire('Cancelado', 'El producto no ha sido eliminado.', 'info');
+            }
         } catch (error) {
             console.error('Error al eliminar el producto:', error);
         }

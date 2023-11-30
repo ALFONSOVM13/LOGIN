@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Modal, Button } from 'react-bootstrap'; 
+import Swal from 'sweetalert2';
+
 
 function VentasVendedor() {
     const [ventas, setVentas] = useState([]);
@@ -34,11 +36,9 @@ function VentasVendedor() {
             }
         };
 
-        // Realiza la búsqueda automática cuando cambia filtroCodigo
         if (filtroCodigo !== '') {
             handleFiltrarAutomatico();
         } else {
-            // Si filtroCodigo está vacío, muestra todas las ventas nuevamente
             setVentasFiltradas([]);
         }
     }, [filtroCodigo]);
@@ -57,6 +57,40 @@ function VentasVendedor() {
         setVentaSeleccionada(venta);
         setShowModal(true);
     };
+
+    const handleEliminarVenta = async (IDVenta) => {
+        // Mostrar la alerta de confirmación
+        Swal.fire({
+          title: '¿Estás seguro?',
+          text: 'Esta acción eliminará la venta. ¿Estás seguro que quieres continuar?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#3085d6',
+          confirmButtonText: 'Sí, eliminar venta',
+          cancelButtonText: 'Cancelar',
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            try {
+              const response = await axios.delete(`https://backendtienda.onrender.com/sales/${IDVenta}`);
+              console.log('Venta eliminada:', response.data);
+      
+              // Actualizar los datos después de eliminar la venta
+              // Eliminar la venta eliminada del estado de ventas
+              const updatedSales = ventas.filter(venta => venta.IDVenta !== IDVenta);
+              setVentas(updatedSales);
+      
+              // Restablecer el filtro de búsqueda por código a un estado inicial (vacío)
+              setFiltroCodigo('');
+            } catch (error) {
+              console.error('Error al eliminar la venta:', error);
+              // Manejar errores, mostrar mensajes al usuario, etc.
+            }
+          }
+        });
+      };
+
+    
 
     const handleCloseModal = () => {
         setVentaSeleccionada(null);
@@ -130,7 +164,7 @@ function VentasVendedor() {
                                         <td>{venta.TotalVenta}</td>
                                         <td>{venta.CantidadVendida}</td>
                                         <Button onClick={() => handleEditarVenta(venta)}>Editar Cantidad Vendida</Button>
-                                    </tr>
+                                        <Button onClick={() => handleEliminarVenta(venta.IDVenta)}>Eliminar</Button>                                    </tr>
                                 ))
                             }
                         </tbody>

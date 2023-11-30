@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/productos.scss';
 import Cookies from 'js-cookie';
+import {useSelector } from 'react-redux';
 
 const ProductList = () => {
 	const [total, setTotal] = useState(0);
@@ -11,6 +12,7 @@ const ProductList = () => {
 	const [active, setActive] = useState(false);
 	const [cart, setCart] = useState([]);
 	const navigate = useNavigate();
+	const userRole = useSelector(state => state.userData?.Role || 'defaultRole');
 
 	useEffect(() => {
 		const storedCart = localStorage.getItem('cart');
@@ -99,7 +101,7 @@ const ProductList = () => {
 							</svg>
 							<div className='count-products'>
 								<span id='contador-productos'>{countProducts}</span>
-								
+
 							</div>
 						</div>
 					)}
@@ -110,17 +112,17 @@ const ProductList = () => {
 					>
 						{cart.length ? (
 							<>
-							
+
 								<div className='row-product'>
-								{cart.length > 0 && (
-									<button className='pago' onClick={() => navigate('/pedidos')}>
-										Proceder al pago
-									</button>
-								)}
-									
+									{cart.length > 0 && (
+										<button className='pago' onClick={() => navigate('/pedidos')}>
+											Proceder al pago
+										</button>
+									)}
+
 									{cart.map(product => (
 										<div className='cart-product' key={product.Codigo}>
-											
+
 											<div className='info-cart-product'>
 												<span className='cantidad-producto-carrito'>
 													{product.quantity}
@@ -149,16 +151,16 @@ const ProductList = () => {
 											</svg>
 										</div>
 									))}
-									
-									
-								</div>
-								
 
-								<div className='cart-total'>									
+
+								</div>
+
+
+								<div className='cart-total'>
 									<h3>Total:</h3>
 									<span className='total-pagar'>${total}</span>
 								</div>
-								
+
 
 
 
@@ -185,7 +187,7 @@ const ProductList = () => {
 						<div className='info-product'>
 							<h2>{product.Nombre}</h2>
 							<p className='price'>${product.Precio}</p>
-							{token && typeof token === 'string' && token.trim() !== '' && (
+							{userRole === 'cliente' && (
 								<button onClick={() => onAddProduct(product)}>
 									Añadir al carrito
 								</button>
