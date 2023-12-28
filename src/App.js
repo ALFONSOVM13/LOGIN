@@ -12,6 +12,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Pedidos from './components/Pedidos';
 import VentasVendedor from './components/Ventas';
 import Footer from './components/Footer'
+import Topbar from './components/Topbar';
 
 function App() {
   const location = useLocation();
@@ -23,9 +24,12 @@ function App() {
 
   return (
       <div className="App">
+        <Topbar/>
         <header className="App-header">
           <Navbar/>
+          
         </header>
+        
         <Routes>
           <Route path="/" element={<Home />} />
           <Route element={<ProtectedRoute canActivate={false} redirectPath="/home" />} >

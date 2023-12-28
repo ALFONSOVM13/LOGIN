@@ -40,7 +40,7 @@ function Login() {
   return (
     <div className="container-fluid">
       <div className="row justify-content-center">
-        <div className="col-lg-3 col-md-6 col-sm-10 mx-auto">
+        <div className="col-lg-5 col-md-6 col-sm-10 mx-auto">
           <div className="card mt-5 border border-primary" style={{ borderWidth: 0 }}>
             <h2 className="text-center p-3 bg-primary text-white w-100">Iniciar Sesión</h2>
             <div className="card-body">

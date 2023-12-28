@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/productos.scss';
 import Cookies from 'js-cookie';
-import {useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 const ProductList = () => {
 	const [total, setTotal] = useState(0);
@@ -158,7 +158,7 @@ const ProductList = () => {
 
 								<div className='cart-total'>
 									<h3>Total:</h3>
-									<span className='total-pagar'>${total}</span>
+									<span className='total-pagar'>{total}€</span>
 								</div>
 
 
@@ -186,7 +186,7 @@ const ProductList = () => {
 						</figure>
 						<div className='info-product'>
 							<h2>{product.Nombre}</h2>
-							<p className='price'>${product.Precio}</p>
+							<p className='price'>{product.Precio}€</p>
 							{userRole === 'cliente' && (
 								<button onClick={() => onAddProduct(product)}>
 									Añadir al carrito

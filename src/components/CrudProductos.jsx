@@ -295,7 +295,7 @@ const ProductCrud = () => {
                         <tr key={producto.Codigo}>
                             <td>{producto.Codigo}</td>
                             <td>{producto.Nombre}</td>
-                            <td>${producto.Precio}</td>
+                            <td>{producto.Precio}€</td>
                             <td>{producto.CantidadStock}</td>
                             <td>
                                 {userRole === 'admin' ? (

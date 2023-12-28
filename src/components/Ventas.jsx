@@ -156,12 +156,12 @@ function VentasVendedor() {
                                     <tr key={venta.IDVenta}>
                                         <td>{venta.CodigoProducto}</td>
                                         <td>{venta.NombreProducto}</td>
-                                        <td>{venta.Precio}</td>
+                                        <td>{venta.Precio}€</td>
                                         <td>{new Date(venta.FechaVenta).toLocaleDateString()}</td>
                                         <td>{venta.FirstName} {venta.LastName}</td>
                                         <td>{venta.Email}</td>
                                         <td>{venta.Phone}</td>
-                                        <td>{venta.TotalVenta}</td>
+                                        <td>{venta.TotalVenta}€</td>
                                         <td>{venta.CantidadVendida}</td>
                                         <Button onClick={() => handleEditarVenta(venta)}>Editar Cantidad Vendida</Button>
                                         <Button onClick={() => handleEliminarVenta(venta.IDVenta)}>Eliminar</Button>                                    </tr>
