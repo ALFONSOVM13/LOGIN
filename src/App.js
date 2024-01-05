@@ -14,7 +14,7 @@ import VentasVendedor from './components/Ventas';
 import Footer from './components/Footer'
 import Topbar from './components/Topbar';
 
-function App(g) {
+function App() {
   const location = useLocation();
   const dispatch = useDispatch();
 
